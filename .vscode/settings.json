@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Lime Warrior.sln"
+    "dotnet.defaultSolution": "Lime_Warrior.sln"
 }
