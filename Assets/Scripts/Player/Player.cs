@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public float health;
     public float jumpForce;
     public float gravity;
     public float horizontalVelocity;
@@ -64,6 +65,17 @@ public class Player : MonoBehaviour
             transform.localScale = playerScale;
         }
 
+    }
+
+    public void TakeDamage(float damage)
+    {
+
+        health -= damage;
+
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
 

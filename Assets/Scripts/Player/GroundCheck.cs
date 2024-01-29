@@ -9,10 +9,13 @@ public class GroundCheck : MonoBehaviour
     public Vector2 surfacePosition;
     ContactFilter2D filter;
     Collider2D[] results = new Collider2D[1];
+    LayerMask whatIsFloor;
+
     private void Update()
     {
         Vector2 point = transform.position + Vector3.down * offset;
         Vector2 size = new Vector2(transform.localScale.x, transform.localScale.y);
+        //edit the overlap box to only detect the floor layer only
         if (Physics2D.OverlapBox(point, size, 0, filter.NoFilter(), results) > 0)
         {
             isGrounded = true;
