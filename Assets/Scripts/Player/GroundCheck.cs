@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GroundCheck : MonoBehaviour
@@ -7,20 +8,26 @@ public class GroundCheck : MonoBehaviour
     public bool isGrounded;
     public float offset = 0.1f;
     public Vector2 surfacePosition;
-    ContactFilter2D filter;
-    Collider2D[] results = new Collider2D[1];
-    LayerMask whatIsFloor;
+    public LayerMask groundMask;
+    Collider2D groundCheck;
+    Vector2 point;
+    Vector2 size;
 
     private void Update()
     {
-        Vector2 point = transform.position + Vector3.down * offset;
-        Vector2 size = new Vector2(transform.localScale.x, transform.localScale.y);
-        //edit the overlap box to only detect the floor layer only
-        if (Physics2D.OverlapBox(point, size, 0, filter.NoFilter(), results) > 0)
+        point = transform.position + Vector3.down * offset;
+        size = new Vector2(transform.localScale.x, transform.localScale.y);
+
+        groundCheck = Physics2D.OverlapBox(point, size, 0, groundMask);
+
+        if (groundCheck != null)
         {
+
             isGrounded = true;
-            surfacePosition = Physics2D.ClosestPoint(transform.position, results[0]);
+            surfacePosition = Physics2D.ClosestPoint(transform.position, groundCheck);
+
         }
+
         else
         {
             isGrounded = false;
