@@ -9,8 +9,10 @@ public class PlayerAttack : MonoBehaviour
     public float damage;
     private float nextAttackTime;
     public float attackRate;
-    public Transform attackPos;
-    public float attackRange;
+    public Transform sweepAttackPos;
+    public float sweepAttackRange;
+    public Transform pokeAttackPos;
+    public float pokeAttackRange;
     public LayerMask whatIsEnemies;
 
     private Animator anim;
@@ -30,17 +32,23 @@ public class PlayerAttack : MonoBehaviour
 
             if (Input.GetKey(KeyCode.F))
             {
-                Attack();
+                SweepAttack();
+                nextAttackTime = Time.time + attackRate;
+            }
+
+            else if (Input.GetKey(KeyCode.G))
+            {
+                PokeAttack();
                 nextAttackTime = Time.time + attackRate;
             }
         }
 
     }
 
-    private void Attack()
+    private void SweepAttack()
     {
-        anim.SetTrigger("attackTrigger");
-        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, whatIsEnemies);
+        anim.SetTrigger("sweepAttackTrigger");
+        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(sweepAttackPos.position, sweepAttackRange, whatIsEnemies);
         for (int i = 0; i < enemiesToDamage.Length; i++)
         {
             enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
@@ -51,6 +59,19 @@ public class PlayerAttack : MonoBehaviour
     {
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(attackPos.position, attackRange);
+        Gizmos.DrawWireSphere(sweepAttackPos.position, sweepAttackRange);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(pokeAttackPos.position, pokeAttackRange);
+    }
+
+    private void PokeAttack()
+    {
+        anim.SetTrigger("pokeAttackTrigger");
+        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(pokeAttackPos.position, pokeAttackRange, whatIsEnemies);
+        for (int i = 0; i < enemiesToDamage.Length; i++)
+        {
+            enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
+        }
     }
 }

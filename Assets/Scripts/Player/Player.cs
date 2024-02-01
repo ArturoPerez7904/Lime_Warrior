@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-
         groundCheck = GetComponent<GroundCheck>();
     }
 
@@ -48,9 +47,6 @@ public class Player : MonoBehaviour
 
         speed = Input.GetAxisRaw("Horizontal") * Time.deltaTime * horizontalVelocity * 100;
         FlipScale();
-
-
-
         transform.Translate(new Vector3(speed, verticalVelocity, 0) * Time.deltaTime);
     }
 
