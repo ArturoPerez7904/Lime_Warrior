@@ -13,6 +13,10 @@ public class Player : MonoBehaviour
     GroundCheck groundCheck;
     private bool isFacingRight = true;
 
+    public float jumpBufferTime;
+    private float jumpBufferCounter;
+    private int allowedJumps = 1;
+
     private void Start()
     {
         groundCheck = GetComponent<GroundCheck>();
@@ -30,12 +34,24 @@ public class Player : MonoBehaviour
             float playerHeightOffset = 1f;
             verticalVelocity = 0;
             transform.position = new Vector3(transform.position.x, groundCheck.surfacePosition.y + playerHeightOffset, transform.position.z);
+            allowedJumps = 1;
         }
 
-        if (groundCheck.isGrounded && Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
 
+            jumpBufferCounter = jumpBufferTime;
+        }
+        else
+        {
+            jumpBufferCounter -= Time.deltaTime;
+        }
+
+        if ((groundCheck.coyoteCounter > 0f) && jumpBufferCounter >= 0 && allowedJumps > 0)
+        {
             verticalVelocity = jumpForce;
+            jumpBufferCounter = 0;
+            allowedJumps = 0;
         }
 
         if ((verticalVelocity > 0) && Input.GetKeyUp(KeyCode.Space))

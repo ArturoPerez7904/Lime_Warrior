@@ -6,10 +6,12 @@ using UnityEngine;
 public class GroundCheck : MonoBehaviour
 {
     public bool isGrounded;
+    public float coyoteTime;
+    [HideInInspector] public float coyoteCounter;
     public float offset = 0.1f;
     public Vector2 surfacePosition;
     public LayerMask groundMask;
-    Collider2D groundCheck;
+    [HideInInspector] public Collider2D groundCheck;
     Vector2 point;
     Vector2 size;
 
@@ -25,12 +27,23 @@ public class GroundCheck : MonoBehaviour
 
             isGrounded = true;
             surfacePosition = Physics2D.ClosestPoint(transform.position, groundCheck);
+            coyoteCounter = coyoteTime;
 
         }
 
         else
         {
             isGrounded = false;
+            coyoteCounter -= Time.deltaTime;
         }
     }
+
+    void OnDrawGizmosSelected()
+    {
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireCube(point, size);
+
+    }
+
 }

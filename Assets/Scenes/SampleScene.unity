@@ -230,7 +230,8 @@ MonoBehaviour:
   health: 5
   jumpForce: 10
   gravity: 20
-  horizontalVelocity: 2
+  horizontalVelocity: 7
+  jumpBufferTime: 0.2
 --- !u!114 &239454503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,11 +245,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGrounded: 0
+  coyoteTime: 0.2
+  coyoteCounter: 0
   offset: 0.1
   surfacePosition: {x: 0, y: 0}
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  groundCheck: {fileID: 0}
 --- !u!114 &239454504
 MonoBehaviour:
   m_ObjectHideFlags: 0
