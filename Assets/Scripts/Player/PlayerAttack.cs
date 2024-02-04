@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -17,33 +19,41 @@ public class PlayerAttack : MonoBehaviour
 
     private Animator anim;
 
+    PlayerControls controls;
+
+    private void Awake()
+    {
+
+        controls = new PlayerControls();
+        controls.Player.SweepAttack.performed += ctx => OnSweepAttack(ctx);
+        controls.Player.PokeAttack.performed += ctx => OnPokeAttack(ctx);
+    }
 
     private void Start()
     {
 
         anim = GetComponent<Animator>();
     }
-
-    private void Update()
+    public void OnSweepAttack(InputAction.CallbackContext ctx)
     {
-
-        if (Time.time >= nextAttackTime)
+        if (Time.time >= nextAttackTime && ctx.started)
         {
 
-            if (Input.GetKey(KeyCode.F))
-            {
-                SweepAttack();
-                nextAttackTime = Time.time + attackRate;
-            }
-
-            else if (Input.GetKey(KeyCode.G))
-            {
-                PokeAttack();
-                nextAttackTime = Time.time + attackRate;
-            }
+            SweepAttack();
+            nextAttackTime = Time.time + attackRate;
         }
-
     }
+
+    public void OnPokeAttack(InputAction.CallbackContext ctx)
+    {
+        if (Time.time >= nextAttackTime && ctx.started)
+        {
+
+            PokeAttack();
+            nextAttackTime = Time.time + attackRate;
+        }
+    }
+
 
     private void SweepAttack()
     {
@@ -55,6 +65,15 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
+    private void PokeAttack()
+    {
+        anim.SetTrigger("pokeAttackTrigger");
+        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(pokeAttackPos.position, pokeAttackRange, whatIsEnemies);
+        for (int i = 0; i < enemiesToDamage.Length; i++)
+        {
+            enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
+        }
+    }
     void OnDrawGizmosSelected()
     {
 
@@ -65,13 +84,13 @@ public class PlayerAttack : MonoBehaviour
         Gizmos.DrawWireSphere(pokeAttackPos.position, pokeAttackRange);
     }
 
-    private void PokeAttack()
+
+    private void OnEnable()
     {
-        anim.SetTrigger("pokeAttackTrigger");
-        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(pokeAttackPos.position, pokeAttackRange, whatIsEnemies);
-        for (int i = 0; i < enemiesToDamage.Length; i++)
-        {
-            enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
-        }
+        controls.Player.Enable();
+    }
+    private void OnDisable()
+    {
+        controls.Player.Disable();
     }
 }

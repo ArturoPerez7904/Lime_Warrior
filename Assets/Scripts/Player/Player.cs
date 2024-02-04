@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 using UnityEngine;
+using System;
 
 public class Player : MonoBehaviour
 {
@@ -16,6 +18,15 @@ public class Player : MonoBehaviour
     public float jumpBufferTime;
     private float jumpBufferCounter;
     private int allowedJumps = 1;
+
+    PlayerControls controls;
+
+    private void Awake()
+    {
+
+        controls = new PlayerControls();
+        controls.Player.Jump.performed += ctx => OnJump(ctx);
+    }
 
     private void Start()
     {
@@ -37,28 +48,12 @@ public class Player : MonoBehaviour
             allowedJumps = 1;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-
-            jumpBufferCounter = jumpBufferTime;
-        }
-        else
-        {
-            jumpBufferCounter -= Time.deltaTime;
-        }
+        jumpBufferCounter -= Time.deltaTime;
 
         if ((groundCheck.coyoteCounter > 0f) && jumpBufferCounter >= 0 && allowedJumps > 0)
         {
             verticalVelocity = jumpForce;
-            jumpBufferCounter = 0;
             allowedJumps = 0;
-        }
-
-        if ((verticalVelocity > 0) && Input.GetKeyUp(KeyCode.Space))
-        {
-
-            verticalVelocity = verticalVelocity / 2;
-
         }
 
         speed = Input.GetAxisRaw("Horizontal") * Time.deltaTime * horizontalVelocity * 100;
@@ -89,6 +84,33 @@ public class Player : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+
+        if (context.started)
+        {
+
+            jumpBufferCounter = jumpBufferTime;
+
+        }
+
+        if (context.canceled && verticalVelocity > 0)
+        {
+
+            verticalVelocity = verticalVelocity / 2;
+        }
+    }
+
+    private void OnEnable()
+    {
+        controls.Player.Enable();
+    }
+    private void OnDisable()
+    {
+        controls.Player.Disable();
+    }
+
 
 
 }
