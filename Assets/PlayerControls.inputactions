@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Up",
+                    "type": "Button",
+                    "id": "ce9ea9d2-a9e9-47f7-92f0-3f35c90895db",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Jump",
                     "type": "Button",
                     "id": "bb3d2e59-9189-4390-b5ff-7f92de70d68a",
@@ -227,6 +236,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "PokeAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d1afd3f3-b7d0-4537-98bd-4ebc013de2bb",
+                    "path": "<Gamepad>/leftStick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Up",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5c73030-961a-4e8e-b719-3f2273544c22",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -55,6 +55,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Up"",
+                    ""type"": ""Button"",
+                    ""id"": ""ce9ea9d2-a9e9-47f7-92f0-3f35c90895db"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""bb3d2e59-9189-4390-b5ff-7f92de70d68a"",
@@ -249,6 +258,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""PokeAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d1afd3f3-b7d0-4537-98bd-4ebc013de2bb"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a5c73030-961a-4e8e-b719-3f2273544c22"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Up"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -839,6 +870,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_SweepAttack = m_Player.FindAction("SweepAttack", throwIfNotFound: true);
         m_Player_PokeAttack = m_Player.FindAction("PokeAttack", throwIfNotFound: true);
+        m_Player_Up = m_Player.FindAction("Up", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -916,6 +948,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_SweepAttack;
     private readonly InputAction m_Player_PokeAttack;
+    private readonly InputAction m_Player_Up;
     private readonly InputAction m_Player_Jump;
     public struct PlayerActions
     {
@@ -924,6 +957,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @SweepAttack => m_Wrapper.m_Player_SweepAttack;
         public InputAction @PokeAttack => m_Wrapper.m_Player_PokeAttack;
+        public InputAction @Up => m_Wrapper.m_Player_Up;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -943,6 +977,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @PokeAttack.started += instance.OnPokeAttack;
             @PokeAttack.performed += instance.OnPokeAttack;
             @PokeAttack.canceled += instance.OnPokeAttack;
+            @Up.started += instance.OnUp;
+            @Up.performed += instance.OnUp;
+            @Up.canceled += instance.OnUp;
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
@@ -959,6 +996,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @PokeAttack.started -= instance.OnPokeAttack;
             @PokeAttack.performed -= instance.OnPokeAttack;
             @PokeAttack.canceled -= instance.OnPokeAttack;
+            @Up.started -= instance.OnUp;
+            @Up.performed -= instance.OnUp;
+            @Up.canceled -= instance.OnUp;
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
@@ -1147,6 +1187,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnSweepAttack(InputAction.CallbackContext context);
         void OnPokeAttack(InputAction.CallbackContext context);
+        void OnUp(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
     }
     public interface IUIActions

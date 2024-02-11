@@ -11,10 +11,15 @@ public class PlayerAttack : MonoBehaviour
     public float damage;
     private float nextAttackTime;
     public float attackRate;
+
     public Transform sweepAttackPos;
     public float sweepAttackRange;
     public Transform pokeAttackPos;
     public float pokeAttackRange;
+    public Transform upAttackPos;
+    public float upAttackRange;
+
+    private bool isUpPressed;
     public LayerMask whatIsEnemies;
 
     private Animator anim;
@@ -27,6 +32,7 @@ public class PlayerAttack : MonoBehaviour
         controls = new PlayerControls();
         controls.Player.SweepAttack.performed += ctx => OnSweepAttack(ctx);
         controls.Player.PokeAttack.performed += ctx => OnPokeAttack(ctx);
+        controls.Player.Up.performed += ctx => OnUp(ctx);
     }
 
     private void Start()
@@ -34,9 +40,9 @@ public class PlayerAttack : MonoBehaviour
 
         anim = GetComponent<Animator>();
     }
-    public void OnSweepAttack(InputAction.CallbackContext ctx)
+    public void OnSweepAttack(InputAction.CallbackContext context)
     {
-        if (Time.time >= nextAttackTime && ctx.started)
+        if (Time.time >= nextAttackTime && context.started)
         {
 
             SweepAttack();
@@ -44,13 +50,38 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    public void OnPokeAttack(InputAction.CallbackContext ctx)
+    public void OnPokeAttack(InputAction.CallbackContext context)
     {
-        if (Time.time >= nextAttackTime && ctx.started)
+        if (Time.time >= nextAttackTime && context.started)
         {
 
-            PokeAttack();
-            nextAttackTime = Time.time + attackRate;
+            if (isUpPressed)
+            {
+
+                UpAttack();
+                nextAttackTime = Time.time + attackRate;
+            }
+            else
+            {
+
+                PokeAttack();
+                nextAttackTime = Time.time + attackRate;
+            }
+
+        }
+    }
+
+    public void OnUp(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+
+            isUpPressed = true;
+        }
+        else if (context.canceled)
+        {
+
+            isUpPressed = false;
         }
     }
 
@@ -74,6 +105,17 @@ public class PlayerAttack : MonoBehaviour
             enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
         }
     }
+
+    private void UpAttack()
+    {
+        anim.SetTrigger("upAttackTrigger");
+        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(pokeAttackPos.position, pokeAttackRange, whatIsEnemies);
+        for (int i = 0; i < enemiesToDamage.Length; i++)
+        {
+            enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(damage);
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
 
@@ -82,6 +124,9 @@ public class PlayerAttack : MonoBehaviour
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(pokeAttackPos.position, pokeAttackRange);
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(upAttackPos.position, upAttackRange);
     }
 
 
